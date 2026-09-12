@@ -1,1 +1,47 @@
-
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#FFD700"><link rel="manifest" href="manifest.json"><title>V14.3 BOTAO ADICIONAR</title><style>:root{--g:#FFD700}*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui}body{background:#000;color:#fff;padding-bottom:80px}.top{position:sticky;top:0;z-index:99;background:#000;border-bottom:2px solid var(--g);padding:8px;display:flex;gap:7px;overflow:auto}.pill{white-space:nowrap;padding:10px 14px;border-radius:30px;border:2px solid #333;background:#1a1a1a;color:#fff;font-weight:900;font-size:13px}.pill.on{background:var(--g);color:#000}.wrap{max-width:760px;margin:auto;padding:10px}.card{margin:10px 0;border:2px solid var(--g);border-radius:18px;padding:14px;background:#111}.h{color:var(--g);font-weight:900}.btn{background:var(--g);color:#000;border:none;border-radius:30px;padding:14px;font-weight:900;width:100%;margin-top:8px}.btn2{background:#111;color:var(--g);border:2px solid var(--g);border-radius:30px;padding:14px;font-weight:900;width:100%;margin-top:8px}.in{width:100%;background:#000;border:2px solid #333;border-radius:12px;padding:14px;color:#fff;margin:6px 0}.item{display:flex;justify-content:space-between;align-items:center;background:#0f0f0f;border:1px solid #222;border-radius:12px;padding:12px;margin:8px 0}.screen{display:none}.screen.show{display:block}</style></head><body>
+<div class="top"><button class="pill on" onclick="tab('alarme',this)">⏰ Alarme</button><button class="pill" onclick="tab('midia',this)">📁 Mídia</button><button class="pill" onclick="tab('grat',this)">✨ Gratidão</button></div>
+<div class="wrap">
+<div id="s-alarme" class="screen show"><div class="card" style="border:3px solid gold"><h3 class="h">⏰ ALARME COM BOTAO ADICIONAR TOQUE</h3>
+<input id="alarmTime" type="time" class="in"><input id="alarmLabel" class="in" placeholder="Nome">
+<select id="alarmSound" class="in"><option value="beep">🔔 Beep</option><option value="galo">🐓 Galo</option><option value="cachorro">🐶 Cachorro</option><option value="passaros">🐦 Pássaros</option><option value="custom">📁 MEU TOQUE DO CELULAR</option></select>
+<div style="border:3px dashed gold;border-radius:16px;padding:14px;margin-top:12px;background:#000">
+<p style="color:gold;font-weight:900;text-align:center">📁 ADICIONAR TOQUE DIRETO DO CELULAR</p>
+<input type="file" id="customToneFile" accept="audio/*" class="in" style="border:2px solid gold">
+<audio id="customTonePreview" controls style="width:100%;margin-top:8px"></audio>
+<button class="btn2" onclick="saveCustomTone()">💾 SALVAR MEU TOQUE</button>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px"><button class="btn" onclick="addAlarm()">+ ADICIONAR ALARME</button><button class="btn2" onclick="testAlarm()">🔊 TESTAR SOM</button></div>
+<div id="listAlarm"></div><audio id="alarmAudio" loop></audio></div>
+<div class="card" style="border:3px solid gold"><h3 class="h">🎵 ADICIONAR AUDIO E MUSICAS DIRETO DO CELULAR</h3>
+<input type="file" id="addAudioFile" accept="audio/*" class="in"><button class="btn" onclick="addAudioFromPhone()">+ ADICIONAR MUSICA DO CELULAR</button><div id="listAudios"></div><br>
+<input type="file" id="addFotoFile" accept="image/*" class="in"><button class="btn" onclick="addFotoFromPhone()">+ ADICIONAR FOTO</button><br><br>
+<input type="file" id="addVideoFile" accept="video/*" class="in"><button class="btn" onclick="addVideoFromPhone()">+ ADICIONAR VIDEO</button><div id="listVideos"></div></div>
+</div>
+<div id="s-midia" class="screen"><div class="card"><h3 class="h">Mídia Salva</h3></div></div>
+<div id="s-grat" class="screen"><div class="card"><h3 class="h">Gratidão</h3><textarea id="grat" class="in" rows="3"></textarea><button class="btn" onclick="addGrat()">Salvar</button><div id="listG"></div></div></div>
+<div class="card" style="border:3px solid gold"><button id="installBtn" class="btn" style="display:none">📲 INSTALAR APLICATIVO</button><div style="text-align:center;font-size:12px">3 pontinhos ⋮ > Instalar aplicativo</div></div>
+</div>
+<script>
+let D=JSON.parse(localStorage.getItem('bgV143')||'{"g":[],"alarms":[],"midiaA":[],"midiaV":[],"f":[]}');
+function save(){localStorage.setItem('bgV143',JSON.stringify(D));render();}
+function tab(t,e){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('show'));document.getElementById('s-'+t).classList.add('show');document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));if(e)e.classList.add('on');}
+let customToneData=localStorage.getItem('customToneV14')||null;
+const alarmSounds={beep:'https://actions.google.com/sounds/v1/alarms/beep_short.ogg',galo:'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c6b4b0.mp3',cachorro:'https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8a74f3f.mp3',passaros:'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c6a8f2.mp3'};
+document.getElementById('customToneFile').addEventListener('change',e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=ev=>{customToneData=ev.target.result;document.getElementById('customTonePreview').src=customToneData;};r.readAsDataURL(f);});
+function saveCustomTone(){if(!customToneData){alert('Escolha arquivo primeiro!');return;}localStorage.setItem('customToneV14',customToneData);alert('✅ Toque salvo! Selecione MEU TOQUE e Add Alarme!');}
+function testAlarm(){let snd=document.getElementById('alarmSound').value;let tone=snd==='custom'?customToneData:alarmSounds[snd];if(snd==='custom'&&!tone){alert('Escolha arquivo e SALVAR!');return;}let a=document.getElementById('alarmAudio');a.src=tone;a.volume=1;a.play().then(()=>{alert('🔊 TOCANDO!');setTimeout(()=>a.pause(),4000);});}
+function addAlarm(){let t=alarmTime.value,l=alarmLabel.value||'Alarme',snd=alarmSound.value;if(!t){alert('Escolha hora!');return;}let tone=snd==='custom'?customToneData:alarmSounds[snd];if(snd==='custom'&&!tone){alert('Escolha arquivo e SALVAR!');return;}D.alarms.push({time:t,label:l,sound:snd,tone:tone,active:true});save();}
+function deleteAlarm(i){D.alarms.splice(i,1);save();}
+function toggleAlarm(i){D.alarms[i].active=!D.alarms[i].active;save();}
+function checkAlarms(now){let cur=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');D.alarms.forEach(a=>{if(a.active&&a.time===cur&&now.getSeconds()<=2){let au=document.getElementById('alarmAudio');if(au.paused){au.src=a.tone;au.play();alert('⏰ ALARME: '+a.label);au.pause();}}});}
+setInterval(()=>{let now=new Date();checkAlarms(now);},1000);
+function addGrat(){let v=document.getElementById('grat').value.trim();if(!v)return;D.g.unshift({txt:v});document.getElementById('grat').value='';save();}
+function addAudioFromPhone(){let f=document.getElementById('addAudioFile').files[0];if(!f)return alert('Escolha áudio');let r=new FileReader();r.onload=e=>{D.midiaA.push({name:f.name,data:e.target.result});save();alert('🎵 Musica '+f.name+' salva SEM GITHUB!');};r.readAsDataURL(f);}
+function addFotoFromPhone(){let f=document.getElementById('addFotoFile').files[0];if(!f)return;let r=new FileReader();r.onload=e=>{D.f.push(e.target.result);save();};r.readAsDataURL(f);}
+function addVideoFromPhone(){let f=document.getElementById('addVideoFile').files[0];if(!f)return;let r=new FileReader();r.onload=e=>{D.midiaV.push({name:f.name,data:e.target.result});save();};r.readAsDataURL(f);}
+function render(){let al='';D.alarms.forEach((a,i)=>al+=`<div class="item"><div><b>⏰ ${a.time}</b> ${a.label}<br><small>${a.sound} ${a.active?'✅ ATIVO':'⏸️ PAUSADO'}</small></div><div><button onclick="toggleAlarm(${i})" style="background:gold;padding:6px;border:none;border-radius:8px">${a.active?'⏸️':'✅'}</button> <button onclick="deleteAlarm(${i})">🗑️</button></div></div>`);document.getElementById('listAlarm').innerHTML=al;
+let la='';D.midiaA.forEach((x,i)=>la+=`<div class="item"><div>🎵 ${x.name}</div><div><audio controls src="${x.data}" style="width:120px"></audio> <button onclick="D.midiaA.splice(${i},1);save()">🗑️</button></div></div>`);document.getElementById('listAudios').innerHTML=la;
+let hg='';D.g.forEach((x,i)=>hg+=`<div class="item"><div>${x.txt}</div><button onclick="D.g.splice(${i},1);save()">✕</button></div>`);let lg=document.getElementById('listG');if(lg)lg.innerHTML=hg;
+}render();
+let deferredPrompt;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;let b=document.getElementById('installBtn');if(b){b.style.display='block';b.onclick=()=>deferredPrompt.prompt();}});if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
+</script></body></html>
