@@ -1,19 +1,19 @@
 {
-  "name": "Banco Gratidão V14 MEGA - José Marcos Lacerda",
-  "short_name": "Gratidão V14",
-  "description": "Super App com Relógio, Alarme Galo, Calculadora, Mercado, Gravações",
-  "start_url": "./",
+  "name": "V14.7 ULTRA 19 COMPLETA - Banco Gratidão",
+  "short_name": "Gratidão ULTRA",
+  "description": "19 botões ultra com lixeirinha e adicionar do celular",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#FFD700",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3159/3159066.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/833/833472.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3159/3159066.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/833/833472.png",
       "sizes": "512x512",
       "type": "image/png"
     }
